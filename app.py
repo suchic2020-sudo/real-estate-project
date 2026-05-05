@@ -22,5 +22,8 @@ app.register_blueprint(auth)
 app.register_blueprint(property_bp)
 app.register_blueprint(admin_bp)
 
+import os
+
 if __name__ == "__main__":
-    app.run(debug=app.config['DEBUG'])
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
