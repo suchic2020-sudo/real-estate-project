@@ -1,0 +1,38 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Enquiries | Admin{% endblock %}
+
+{% block content %}
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">Enquiries</p>
+        <h2>Recent contact requests</h2>
+        <p class="section-copy">Review all submitted enquiries and respond to buyers quickly.</p>
+    </div>
+</section>
+
+<div class="section-surface">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Property</th>
+                <th>Message</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for enquiry in enquiries %}
+            <tr>
+                <td>{{ enquiry['name'] }}</td>
+                <td>{{ enquiry['email'] }}</td>
+                <td>{{ enquiry['property_title'] }}</td>
+                <td>{{ enquiry['message'] }}</td>
+                <td>{{ enquiry['created_at'][:10] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}About Us | Apex Estates{% endblock %}
+
+{% block content %}
+<section class="section-card section-block">
+    <div class="section-heading">
+        <p class="eyebrow">About Apex Estates</p>
+        <h2>We match people with exceptional homes.</h2>
+        <p class="section-copy">With years of local experience, our team provides expert guidance for residential, rental and investment property searches.</p>
+    </div>
+</section>
+
+<section class="section-card section-block">
+    <div class="about-section">
+        <div>
+            <h3>Our Mission</h3>
+            <p>We make property search simple, reliable and delightful. From first viewing to closing, we support every decision with honesty, market insight, and modern tools.</p>
+            <ul class="feature-list">
+            <li>Verified listings in trusted neighborhoods</li>
+            <li>Flexible financing and sale support</li>
+            <li>Personalized property recommendations</li>
+            <li>Responsive service from local experts</li>
+        </ul>
+    </div>
+    <div>
+        <img src="{{ url_for('static', filename='uploads/house8.jpg') }}" alt="About Apex Estates">
+    </div>
+</section>
+
+<section class="section-card section-block">
+    <div class="section-heading">
+        <p class="eyebrow">Our Services</p>
+        <h2>Modern real estate support at every stage.</h2>
+    </div>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h4>Buy with confidence</h4>
+            <p>Access curated homes with clear pricing, transparent inspections and expert negotiation support.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Rent smarter</h4>
+            <p>Find rental homes that match your lifestyle, budget and desired neighborhood in one streamlined search.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Invest wisely</h4>
+            <p>Explore properties with strong appreciation potential, supported by market research and local analysis.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

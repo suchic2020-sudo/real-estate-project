@@ -1,0 +1,107 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Explore Properties | Apex Estates{% endblock %}
+
+{% block content %}
+<section class="section-card section-block">
+    <div class="section-heading">
+        <p class="eyebrow">Browse Listings</p>
+        <h2>Find the ideal property for your next purchase.</h2>
+        <p class="section-copy">Filter by location, type, price and bedrooms. Listings update instantly and can be shared using the URL.</p>
+    </div>
+</section>
+
+<div class="properties-layout">
+    <aside class="filters-panel">
+        <h3>Search & Filters</h3>
+        <form method="GET">
+            <div class="filter-group">
+                <label for="search">Search</label>
+                <input type="text" id="search" name="search" placeholder="Title or location" value="{{ filters.search }}">
+            </div>
+            <div class="filter-group">
+                <label for="property_type">Property type</label>
+                <select id="property_type" name="property_type">
+                    <option value="">Any type</option>
+                    <option value="Apartment" {% if filters.property_type == 'Apartment' %}selected{% endif %}>Apartment</option>
+                    <option value="Villa" {% if filters.property_type == 'Villa' %}selected{% endif %}>Villa</option>
+                    <option value="Plot" {% if filters.property_type == 'Plot' %}selected{% endif %}>Plot</option>
+                    <option value="Commercial" {% if filters.property_type == 'Commercial' %}selected{% endif %}>Commercial</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="status">Status</label>
+                <select id="status" name="status">
+                    <option value="">Any status</option>
+                    <option value="For Sale" {% if filters.status == 'For Sale' %}selected{% endif %}>For Sale</option>
+                    <option value="For Rent" {% if filters.status == 'For Rent' %}selected{% endif %}>For Rent</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="min_price">Min price</label>
+                <input type="number" id="min_price" name="min_price" placeholder="₹ 0" value="{{ filters.min_price }}">
+            </div>
+            <div class="filter-group">
+                <label for="max_price">Max price</label>
+                <input type="number" id="max_price" name="max_price" placeholder="₹ 0" value="{{ filters.max_price }}">
+            </div>
+            <div class="filter-group">
+                <label for="bedrooms">Bedrooms</label>
+                <select id="bedrooms" name="bedrooms">
+                    <option value="">Any</option>
+                    <option value="1" {% if filters.bedrooms == '1' %}selected{% endif %}>1+</option>
+                    <option value="2" {% if filters.bedrooms == '2' %}selected{% endif %}>2+</option>
+                    <option value="3" {% if filters.bedrooms == '3' %}selected{% endif %}>3+</option>
+                    <option value="4" {% if filters.bedrooms == '4' %}selected{% endif %}>4+</option>
+                </select>
+            </div>
+            <div class="filter-actions">
+                <button type="submit" class="btn">Apply filters</button>
+                <a href="{{ url_for('property.properties') }}" class="btn btn-secondary">Reset</a>
+            </div>
+        </form>
+    </aside>
+
+    <div>
+        <div class="property-grid">
+            {% if properties %}
+                {% for property in properties %}
+                    <article class="property-card">
+                        <img src="{{ url_for('static', filename='uploads/' + property['image_filename']) }}" alt="{{ property['title'] }}">
+                        <span class="badge">{{ property['status'] }}</span>
+                        <div class="card-body">
+                            <h3>{{ property['title'] }}</h3>
+                            <p>{{ property['location'] }}</p>
+                            <div class="property-meta">
+                                <span class="spec-pill"><i class="fa-solid fa-bed"></i> {{ property['bedrooms'] or 0 }} bd</span>
+                                <span class="spec-pill"><i class="fa-solid fa-bath"></i> {{ property['bathrooms'] or 0 }} ba</span>
+                                <span class="spec-pill"><i class="fa-solid fa-ruler-combined"></i> {{ property['area_sqft'] or 0 }} sqft</span>
+                            </div>
+                            <div class="property-price">₹ {{ "{:,.0f}".format(property['price']) }}</div>
+                            <div class="card-actions">
+                                <a href="{{ url_for('property.property_detail', property_id=property['id']) }}" class="btn">View Details</a>
+                                <a href="{{ url_for('property.add_favorite', property_id=property['id']) }}" class="btn btn-secondary">Add Favorite</a>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <h3>No listings found</h3>
+                    <p>Try adjusting your search criteria or reset the filters.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="pagination">
+            {% if has_prev %}
+                <a href="{{ url_for('property.properties') }}?{% if query_string %}{{ query_string }}&{% endif %}page={{ page - 1 }}">← Previous</a>
+            {% endif %}
+            <span>Page {{ page }} of {{ page_count }}</span>
+            {% if has_next %}
+                <a href="{{ url_for('property.properties') }}?{% if query_string %}{{ query_string }}&{% endif %}page={{ page + 1 }}">Next →</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

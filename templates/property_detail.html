@@ -1,0 +1,98 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}{{ property['title'] }} | Apex Estates{% endblock %}
+
+{% block content %}
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">Property Details</p>
+        <h2>{{ property['title'] }}</h2>
+        <p class="section-copy">Explore full details, amenities, location, and contact the agent directly from this page.</p>
+    </div>
+</section>
+
+<div class="detail-page">
+    <div>
+        <div class="detail-hero">
+            <img src="{{ url_for('static', filename='uploads/' + property['image_filename']) }}" class="property-detail-img" alt="{{ property['title'] }}">
+        </div>
+
+        <div class="detail-content">
+            <span class="property-status">{{ property['status'] }}</span>
+            <p>{{ property['location'] }}</p>
+            <div class="property-price">₹ {{ "{:,.0f}".format(property['price']) }}</div>
+            <div class="property-meta">
+                <span class="spec-pill"><i class="fa-solid fa-bed"></i> {{ property['bedrooms'] or 0 }} Bedrooms</span>
+                <span class="spec-pill"><i class="fa-solid fa-bath"></i> {{ property['bathrooms'] or 0 }} Bathrooms</span>
+                <span class="spec-pill"><i class="fa-solid fa-ruler-combined"></i> {{ property['area_sqft'] or 0 }} sqft</span>
+                <span class="spec-pill"><i class="fa-solid fa-house"></i> {{ property['property_type'] }}</span>
+            </div>
+
+            <p>
+                {{ property['description'] or 'A beautiful property with premium finishes and modern amenities.' }}
+            </p>
+
+            <p>
+                <strong>Listed on:</strong> {{ property['created_at'][:10] if property['created_at'] else 'N/A' }}
+            </p>
+            <div class="google-map">
+                <iframe 
+                  width="100%" 
+                  height="300"
+                  style="border:0; border-radius:10px;"
+                  loading="lazy"
+                  src="https://www.google.com/maps?q={{ property.location }}&output=embed">
+                </iframe>
+            </div>
+
+            <div class="detail-actions">
+                <a href="{{ url_for('property.add_favorite', property_id=property['id']) }}" class="btn">Add to Favorites</a>
+            </div>
+        </div>
+    </div>
+
+    <aside class="enquiry-card">
+        <h3>Send an enquiry</h3>
+        <p>Please provide your contact details and requirements. Our team will reply quickly.</p>
+        <form method="POST">
+            <div class="field-group">
+                <label for="name">Your name</label>
+                <input id="name" name="name" type="text" value="{{ session.get('username') or '' }}" required>
+            </div>
+            <div class="field-group">
+                <label for="email">Email address</label>
+                <input id="email" name="email" type="email" value="{{ session.get('user') or '' }}" required>
+            </div>
+            <div class="field-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" placeholder="Tell us what you are looking for" required></textarea>
+            </div>
+            <button type="submit" class="btn">Send Enquiry</button>
+        </form>
+    </aside>
+</div>
+
+<section class="section-card">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Similar Properties</p>
+            <h2>Other homes in the same neighborhood</h2>
+        </div>
+    </div>
+    <div class="similar-grid">
+        {% for item in similar %}
+        <article class="similar-card">
+            <img src="{{ url_for('static', filename='uploads/' + item['image_filename']) }}" alt="{{ item['title'] }}">
+            <span class="badge">{{ item['status'] }}</span>
+            <div class="card-body">
+                <h3>{{ item['title'] }}</h3>
+                <p>{{ item['location'] }}</p>
+                <div class="card-actions">
+                    <a href="{{ url_for('property.property_detail', property_id=item['id']) }}" class="btn">View</a>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

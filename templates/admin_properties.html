@@ -1,0 +1,60 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Property Management | Admin{% endblock %}
+
+{% block content %}
+<section class="admin-page">
+    <div class="admin-header">
+        <div>
+            <p class="eyebrow">Admin Management</p>
+            <h1>Property Listings</h1>
+            <p class="section-copy">Review, edit, and remove listings from the portfolio.</p>
+        </div>
+        <a href="{{ url_for('admin.add_property') }}" class="button">Add New Property</a>
+    </div>
+
+    <div class="table-card">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for property in properties %}
+                <tr>
+                    <td><img src="{{ url_for('static', filename='uploads/' + property['image_filename']) }}" class="thumbnail"></td>
+                    <td>{{ property['title'] }}</td>
+                    <td>{{ property['property_type'] }}</td>
+                    <td>{{ property['status'] }}</td>
+                    <td>₹ {{ property['price'] }}</td>
+                    <td class="table-actions">
+                        <a href="{{ url_for('admin.edit_property', property_id=property['id']) }}" class="button button-small button-secondary">Edit</a>
+                        <button type="button" class="button button-small button-danger" data-id="{{ property['id'] }}" data-title="{{ property['title'] }}" onclick="openDeleteModal(this)">Delete</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<div class="modal" id="deleteModal">
+    <div class="modal-backdrop" onclick="closeDeleteModal()"></div>
+    <div class="modal-card">
+        <h2>Confirm Deletion</h2>
+        <p>Are you sure you want to remove <strong id="deleteModalTitle"></strong> from the listings?</p>
+        <form id="deleteForm" method="POST">
+            <div class="modal-actions">
+                <button type="button" class="button button-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button type="submit" class="button button-danger">Delete Property</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

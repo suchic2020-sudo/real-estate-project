@@ -1,0 +1,11 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Thank You | Apex Estates{% endblock %}
+
+{% block content %}
+<div class="section-surface success-page">
+    <h2>Thank you for reaching out.</h2>
+    <p class="section-copy">Your message has been received. We will reply to you soon with the next steps.</p>
+    <a href="{{ url_for('property.index') }}" class="button">Return to Home</a>
+</div>
+{% endblock %}

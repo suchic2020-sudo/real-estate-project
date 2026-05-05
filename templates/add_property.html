@@ -1,0 +1,70 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Add Property | Admin{% endblock %}
+
+{% block content %}
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">Add New Listing</p>
+        <h2>Create a fresh property listing.</h2>
+        <p class="section-copy">Complete the form below to publish a new property on the site.</p>
+    </div>
+</section>
+
+<div class="section-surface form-shell">
+    <form method="POST" enctype="multipart/form-data" class="form-grid">
+        <div class="field-group">
+            <label for="title">Property title</label>
+            <input id="title" name="title" type="text" required>
+        </div>
+        <div class="field-group">
+            <label for="location">Location</label>
+            <input id="location" name="location" type="text" required>
+        </div>
+        <div class="field-group">
+            <label for="price">Price</label>
+            <input id="price" name="price" type="number" required>
+        </div>
+        <div class="field-group">
+            <label for="property_type">Property type</label>
+            <select id="property_type" name="property_type" required>
+                <option value="Apartment">Apartment</option>
+                <option value="Villa">Villa</option>
+                <option value="Plot">Plot</option>
+                <option value="Commercial">Commercial</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label for="status">Status</label>
+            <select id="status" name="status" required>
+                <option value="For Sale">For Sale</option>
+                <option value="For Rent">For Rent</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label for="bedrooms">Bedrooms</label>
+            <input id="bedrooms" name="bedrooms" type="number" required>
+        </div>
+        <div class="field-group">
+            <label for="bathrooms">Bathrooms</label>
+            <input id="bathrooms" name="bathrooms" type="number" required>
+        </div>
+        <div class="field-group">
+            <label for="area_sqft">Area (sqft)</label>
+            <input id="area_sqft" name="area_sqft" type="number" required>
+        </div>
+        <div class="field-group full-width">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="5" required></textarea>
+        </div>
+        <div class="field-group full-width">
+            <label for="image">Feature image</label>
+            <input id="image" name="image" type="file" accept="image/*" required>
+        </div>
+        <div class="form-actions full-width">
+            <button type="submit" class="button">Publish Property</button>
+            <a href="{{ url_for('admin.admin_properties') }}" class="button button-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

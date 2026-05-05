@@ -1,0 +1,71 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Edit Property | Admin{% endblock %}
+
+{% block content %}
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">Edit Listing</p>
+        <h2>Update property details.</h2>
+        <p class="section-copy">Make changes to the listing or upload a replacement image.</p>
+    </div>
+</section>
+
+<div class="section-surface form-shell">
+    <form method="POST" enctype="multipart/form-data" class="form-grid">
+        <div class="field-group">
+            <label for="title">Property title</label>
+            <input id="title" name="title" type="text" value="{{ property['title'] }}" required>
+        </div>
+        <div class="field-group">
+            <label for="location">Location</label>
+            <input id="location" name="location" type="text" value="{{ property['location'] }}" required>
+        </div>
+        <div class="field-group">
+            <label for="price">Price</label>
+            <input id="price" name="price" type="number" value="{{ property['price'] }}" required>
+        </div>
+        <div class="field-group">
+            <label for="property_type">Property type</label>
+            <select id="property_type" name="property_type" required>
+                <option value="Apartment" {% if property['property_type'] == 'Apartment' %}selected{% endif %}>Apartment</option>
+                <option value="Villa" {% if property['property_type'] == 'Villa' %}selected{% endif %}>Villa</option>
+                <option value="Plot" {% if property['property_type'] == 'Plot' %}selected{% endif %}>Plot</option>
+                <option value="Commercial" {% if property['property_type'] == 'Commercial' %}selected{% endif %}>Commercial</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label for="status">Status</label>
+            <select id="status" name="status" required>
+                <option value="For Sale" {% if property['status'] == 'For Sale' %}selected{% endif %}>For Sale</option>
+                <option value="For Rent" {% if property['status'] == 'For Rent' %}selected{% endif %}>For Rent</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label for="bedrooms">Bedrooms</label>
+            <input id="bedrooms" name="bedrooms" type="number" value="{{ property['bedrooms'] }}" required>
+        </div>
+        <div class="field-group">
+            <label for="bathrooms">Bathrooms</label>
+            <input id="bathrooms" name="bathrooms" type="number" value="{{ property['bathrooms'] }}" required>
+        </div>
+        <div class="field-group">
+            <label for="area_sqft">Area (sqft)</label>
+            <input id="area_sqft" name="area_sqft" type="number" value="{{ property['area_sqft'] }}" required>
+        </div>
+        <div class="field-group full-width">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="5" required>{{ property['description'] }}</textarea>
+        </div>
+        <div class="field-group full-width">
+            <label for="image">Update image</label>
+            <input id="image" name="image" type="file" accept="image/*">
+            <p class="section-copy">Leave blank to keep the current photo.</p>
+        </div>
+        <div class="form-actions full-width">
+            <button type="submit" class="button">Save Changes</button>
+            <a href="{{ url_for('admin.admin_properties') }}" class="button button-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

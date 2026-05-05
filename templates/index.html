@@ -1,0 +1,103 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Apex Estates | Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+
+    <div class="hero-text">
+        <h1>Luxury properties for buying, renting, and investing.</h1>
+        <p>Discover curated homes with transparent pricing.</p>
+
+        <form method="GET" action="/properties">
+            <input type="text" name="search" placeholder="Search by title or location">
+
+            <select name="type">
+                <option value="">All types</option>
+                <option value="Apartment">Apartment</option>
+                <option value="Villa">Villa</option>
+            </select>
+
+            <select name="status">
+                <option value="">Any status</option>
+                <option value="For Sale">For Sale</option>
+                <option value="For Rent">For Rent</option>
+            </select>
+
+            <button type="submit">Search Listings</button>
+        </form>
+    </div>
+
+    <div class="hero-image">
+        <img src="{{ url_for('static', filename='uploads/house12.jpg') }}" alt="House">
+    </div>
+
+</section>
+
+<section class="section-card section-block">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Featured Listings</p>
+            <h2>Handpicked properties for your next move.</h2>
+            <p class="section-copy">We showcase the best homes in premium neighborhoods with modern finishes and strong investment potential.</p>
+        </div>
+    </div>
+
+    <div class="property-grid">
+        {% for property in featured %}
+            <article class="property-card">
+                <img src="{{ url_for('static', filename='uploads/' + property['image_filename']) }}" alt="{{ property['title'] }}">
+                <span class="badge">{{ property['status'] }}</span>
+                <div class="card-body">
+                    <h3>{{ property['title'] }}</h3>
+                    <p>{{ property['location'] }}</p>
+                    <div class="property-meta">
+                        <span class="spec-pill"><i class="fa-solid fa-bed"></i> {{ property['bedrooms'] or 0 }} bd</span>
+                        <span class="spec-pill"><i class="fa-solid fa-bath"></i> {{ property['bathrooms'] or 0 }} ba</span>
+                        <span class="spec-pill"><i class="fa-solid fa-ruler-combined"></i> {{ property['area_sqft'] or 0 }} sqft</span>
+                    </div>
+                    <div class="property-price">₹ {{ "{:,.0f}".format(property['price']) }}</div>
+                    <div class="card-actions">
+                        <a href="{{ url_for('property.property_detail', property_id=property['id']) }}" class="btn">View Details</a>
+                    </div>
+                </div>
+            </article>
+        {% else %}
+            <div class="empty-state">
+                <p>No featured listings are available right now.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section-card">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">What clients say</p>
+            <h2>Trusted by buyers across the city.</h2>
+        </div>
+    </div>
+
+    <div class="property-grid">
+        <div class="property-card">
+            <div class="card-body">
+                <p class="testimonial-text">"Apex Estates helped us find a perfect apartment in under two weeks. The process was transparent and the team was incredibly responsive."</p>
+                <p class="testimonial-author"><strong>Priya S.</strong> • Homebuyer</p>
+            </div>
+        </div>
+        <div class="property-card">
+            <div class="card-body">
+                <p class="testimonial-text">"The rental support and property selection were outstanding. We found a modern villa that fit our family budget and lifestyle."</p>
+                <p class="testimonial-author"><strong>Rajiv K.</strong> • Renter</p>
+            </div>
+        </div>
+        <div class="property-card">
+            <div class="card-body">
+                <p class="testimonial-text">"Professional, polished, and detail-oriented service. They helped us secure the right investment property quickly."</p>
+                <p class="testimonial-author"><strong>Meera T.</strong> • Investor</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

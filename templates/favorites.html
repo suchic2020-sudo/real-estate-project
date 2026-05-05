@@ -1,0 +1,49 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Saved Favorites | Apex Estates{% endblock %}
+
+{% block content %}
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">Favorites</p>
+        <h2>Your saved properties.</h2>
+        <p class="section-copy">Keep track of homes you like and return to them anytime.</p>
+    </div>
+</section>
+
+{% if properties %}
+<div class="favorites-grid grid-list">
+    {% for property in properties %}
+    <article class="card">
+        <div class="card-image">
+            <img src="{{ url_for('static', filename='uploads/' + property['image_filename']) }}" alt="{{ property['title'] }}">
+            <span class="card-badge">{{ property['status'] }}</span>
+        </div>
+        <div class="card-content">
+            <div class="card-meta">
+                <h3 class="card-title">{{ property['title'] }}</h3>
+                <span class="card-price">₹ {{ property['price'] }}</span>
+            </div>
+            <p class="card-location"><i class="fa-solid fa-location-dot"></i> {{ property['location'] }}</p>
+            <div class="property-specs">
+                <span class="spec-pill"><i class="fa-solid fa-bed"></i> {{ property['bedrooms'] or 0 }}</span>
+                <span class="spec-pill"><i class="fa-solid fa-bath"></i> {{ property['bathrooms'] or 0 }}</span>
+            </div>
+            <div class="card-actions">
+                <a href="{{ url_for('property.property_detail', property_id=property['id']) }}" class="button">View</a>
+                <form action="{{ url_for('property.remove_favorite', property_id=property['id']) }}" method="POST" style="margin:0;">
+                    <button type="submit" class="button button-secondary">Remove</button>
+                </form>
+            </div>
+        </div>
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<div class="section-surface">
+    <h3>No favorites saved yet.</h3>
+    <p class="section-copy">Browse the property listings and add your favorites to keep them handy.</p>
+    <a href="{{ url_for('property.properties') }}" class="button">Browse Properties</a>
+</div>
+{% endif %}
+{% endblock %}

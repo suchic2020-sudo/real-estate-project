@@ -1,0 +1,89 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard | Apex Estates{% endblock %}
+
+{% block content %}
+<section class="section-card admin-page">
+    <div class="admin-header">
+        <div>
+            <p class="eyebrow">Admin Dashboard</p>
+            <h1>Business overview</h1>
+            <p class="section-copy">Monitor listings, enquiries and user activity from one central dashboard.</p>
+        </div>
+        <a href="{{ url_for('admin.admin_properties') }}" class="btn">Manage Properties</a>
+    </div>
+
+    <div class="admin-stat-grid">
+        <div class="stat-card">
+            <h4>Total Properties</h4>
+            <strong>{{ properties_count }}</strong>
+        </div>
+        <div class="stat-card">
+            <h4>Total Enquiries</h4>
+            <strong>{{ enquiries_count }}</strong>
+        </div>
+        <div class="stat-card">
+            <h4>Total Users</h4>
+            <strong>{{ users_count }}</strong>
+        </div>
+        <div class="stat-card">
+            <h4>Active Listings</h4>
+            <strong>{{ for_sale_count + for_rent_count }}</strong>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <h3>Recent Listings</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for property in recent_properties %}
+                <tr>
+                    <td>{{ property['title'] }}</td>
+                    <td>{{ property['property_type'] }}</td>
+                    <td>{{ property['status'] }}</td>
+                    <td>₹ {{ "{:,.0f}".format(property['price']) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-card">
+        <h3>Latest Enquiries</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if enquiries %}
+                    {% for e in enquiries %}
+                    <tr>
+                        <td>{{ e['name'] }}</td>
+                        <td>{{ e['email'] }}</td>
+                        <td>{{ e['message'][:50] if e['message'] else 'N/A' }}</td>
+                        <td>{{ e['created_at'].strftime('%Y-%m-%d') if e['created_at'] else 'N/A' }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="4">No enquiries found</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <h1 class="dashboard-title">📊 Admin Dashboard</h1>
+
+    <div class="dashboard-grid">
+
+        <div class="dash-card">
+            <h2>🏠 Properties</h2>
+            <p>Manage all listings</p>
+            <a href="/properties"><button>View</button></a>
+        </div>
+
+        <div class="dash-card">
+            <h2>➕ Add Property</h2>
+            <p>Add new listings</p>
+            <a href="/add_property"><button>Add</button></a>
+        </div>
+
+        <div class="dash-card">
+            <h2>📩 Enquiries</h2>
+            <p>Customer messages</p>
+            <a href="/view_enquiries"><button>View</button></a>
+        </div>
+
+        <div class="dash-card">
+            <h2>👥 Users</h2>
+            <p>Registered users</p>
+            <button disabled>Coming Soon</button>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
