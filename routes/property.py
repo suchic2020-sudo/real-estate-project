@@ -462,18 +462,23 @@ def contact():
         conn.commit()
         conn.close()
 
-        # Send email
-        body = f"""
-New Enquiry:
+       # Send email
+     # Send email
+    body = f"""
+    New Enquiry:
 
-Name: {name}
-Email: {email}
-Message: {message}
-"""
-        send_email("New Enquiry", body)
+    Name: {name}
+    Email: {email}
+    Message: {message}
+     """
 
-        flash('Your message has been sent successfully. We will be in touch soon.', 'success')
-        return redirect(url_for('property.success'))
+    try:
+       send_email("New Enquiry", body)
+    except Exception as e:
+       print("MAIL ERROR:", e)
+
+    flash('Your message has been sent successfully. We will be in touch soon.', 'success')
+    return redirect(url_for('property.success'))
 
     return render_template('contact.html')
 
