@@ -8,27 +8,32 @@ import smtplib
 from email.mime.text import MIMEText
 
 def send_email(subject, body):
+    sender = os.environ.get("EMAIL_USER")
+    password = os.environ.get("EMAIL_PASS")
+
+    if not sender or not password:
+        print("Email credentials are not configured.")
+        return
+
+    msg = MIMEText(body)
+    msg["Subject"] = subject
+    msg["From"] = sender
+    msg["To"] = sender
+
+    server = None
     try:
-        import smtplib
-        from email.mime.text import MIMEText
-        import os
-
-        sender = os.environ.get("EMAIL_USER")
-        password = os.environ.get("EMAIL_PASS")
-
-        msg = MIMEText(body)
-        msg["Subject"] = subject
-        msg["From"] = sender
-        msg["To"] = sender
-
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
         server.login(sender, password)
         server.send_message(msg)
-        server.quit()
-
     except Exception as e:
         print("Email error:", e)
+    finally:
+        if server is not None:
+            try:
+                server.quit()
+            except Exception:
+                pass
 
 property_bp = Blueprint('property', __name__)
 
@@ -453,32 +458,29 @@ def contact():
             flash('Please complete the contact form before sending.', 'error')
             return render_template('contact.html')
 
-        # Save to database with SQLite current timestamp
         conn = get_db()
         conn.execute(
-            "INSERT INTO enquiries (name, email, message, created_at) VALUES (?, ?, ?, datetime('now'))",
-            (name, email, message)
+            'INSERT INTO enquiries (name, email, message, created_at) VALUES (?, ?, ?, ?)',
+            (name, email, message, datetime.now().isoformat())
         )
         conn.commit()
         conn.close()
 
-       # Send email
-     # Send email
-    body = f"""
-    New Enquiry:
+        body = (
+            f"New Enquiry:\n\n"
+            f"Name: {name}\n"
+            f"Email: {email}\n"
+            f"Subject: {subject}\n"
+            f"Message: {message}\n"
+        )
 
-    Name: {name}
-    Email: {email}
-    Message: {message}
-     """
+        try:
+            send_email('New Enquiry', body)
+        except Exception as e:
+            print('MAIL ERROR:', e)
 
-    try:
-       send_email("New Enquiry", body)
-    except Exception as e:
-       print("MAIL ERROR:", e)
-
-    flash('Your message has been sent successfully. We will be in touch soon.', 'success')
-    return redirect(url_for('property.success'))
+        flash('Your message has been sent successfully. We will be in touch soon.', 'success')
+        return redirect(url_for('property.success'))
 
     return render_template('contact.html')
 
