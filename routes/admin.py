@@ -5,6 +5,22 @@ from datetime import datetime
 import os
 import uuid
 
+
+def parse_datetime(dt_str):
+    """Parse datetime string from SQLite and return datetime object."""
+    if not dt_str:
+        return None
+    if isinstance(dt_str, datetime):
+        return dt_str
+    try:
+        if 'T' in str(dt_str):
+            return datetime.fromisoformat(str(dt_str).split('.')[0])
+        else:
+            return datetime.strptime(str(dt_str), "%Y-%m-%d %H:%M:%S")
+    except Exception:
+        return None
+
+
 admin_bp = Blueprint('admin', __name__)
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'webp'}
@@ -59,12 +75,14 @@ def admin_dashboard():
     enquiries_count = conn.execute('SELECT COUNT(*) FROM enquiries').fetchone()[0]
     recent_properties = conn.execute('SELECT * FROM properties ORDER BY created_at DESC LIMIT 5').fetchall()
     
-    # Fetch enquiries safely without complex joins
-    enquiries = conn.execute('SELECT * FROM enquiries ORDER BY created_at DESC LIMIT 5').fetchall()
+    enquiries_raw = conn.execute('SELECT * FROM enquiries LIMIT 5').fetchall()
     
-    # Ensure enquiries is always a list
-    if enquiries is None:
-        enquiries = []
+    enquiries = []
+    if enquiries_raw:
+        for e in enquiries_raw:
+            enquiry_dict = dict(e)
+            enquiry_dict['created_at'] = parse_datetime(enquiry_dict.get('created_at'))
+            enquiries.append(enquiry_dict)
     
     conn.close()
 
@@ -79,6 +97,7 @@ def admin_dashboard():
         enquiries=enquiries,
         format_time_ago=format_time_ago
     )
+
 
 
 @admin_bp.route('/admin/properties')
@@ -223,7 +242,7 @@ def view_enquiries():
         return redirect(url_for('property.index'))
 
     conn = get_db()
-    enquiries = conn.execute(
+    enquiries_raw = conn.execute(
         'SELECT e.*, p.title AS property_title, u.username AS user_name '
         'FROM enquiries e '
         'LEFT JOIN properties p ON e.property_id = p.id '
@@ -231,5 +250,12 @@ def view_enquiries():
         'ORDER BY e.created_at DESC'
     ).fetchall()
     conn.close()
+
+    enquiries = []
+    if enquiries_raw:
+        for e in enquiries_raw:
+            enquiry_dict = dict(e)
+            enquiry_dict['created_at'] = parse_datetime(enquiry_dict.get('created_at'))
+            enquiries.append(enquiry_dict)
 
     return render_template('enquiries.html', enquiries=enquiries)

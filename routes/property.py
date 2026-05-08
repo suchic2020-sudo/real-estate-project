@@ -357,9 +357,12 @@ def property_detail(property_id):
         conn.commit()
         conn.close()
 
-        # Send email
         body = f"Name: {name}\nEmail: {email}\nMessage: {message}\nProperty: {property_item['title']}"
-        send_email(f"Enquiry for {property_item['title']}", body)
+        
+        try:
+            send_email(f"Enquiry for {property_item['title']}", body)
+        except Exception as e:
+            print("MAIL ERROR:", e)
 
         flash('Your enquiry has been submitted successfully.', 'success')
         return redirect(url_for('property.property_detail', property_id=property_id))

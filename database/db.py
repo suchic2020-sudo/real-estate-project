@@ -17,7 +17,7 @@ def _table_columns(conn, table_name):
 def get_db():
     if os.path.dirname(DB_PATH):
         os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-    conn = sqlite3.connect(DB_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -123,6 +123,12 @@ def init_db():
             cursor.execute('ALTER TABLE enquiries ADD COLUMN user_id INTEGER')
         if 'property_id' not in columns:
             cursor.execute('ALTER TABLE enquiries ADD COLUMN property_id INTEGER')
+        if 'name' not in columns:
+            cursor.execute('ALTER TABLE enquiries ADD COLUMN name TEXT')
+        if 'email' not in columns:
+            cursor.execute('ALTER TABLE enquiries ADD COLUMN email TEXT')
+        if 'message' not in columns:
+            cursor.execute('ALTER TABLE enquiries ADD COLUMN message TEXT')
         if 'property' not in columns:
             cursor.execute('ALTER TABLE enquiries ADD COLUMN property TEXT')
         if 'created_at' not in columns:
