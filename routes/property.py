@@ -22,7 +22,7 @@ def send_email(subject, body):
 
     server = None
     try:
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server = smtplib.SMTP("smtp.gmail.com", 587, timeout=10)
         server.starttls()
         server.login(sender, password)
         server.send_message(msg)
