@@ -3,6 +3,10 @@ from database.db import get_db
 from urllib.parse import urlencode
 from datetime import datetime
 
+import os
+import smtplib
+from email.mime.text import MIMEText
+
 def send_email(subject, body):
     try:
         import smtplib
